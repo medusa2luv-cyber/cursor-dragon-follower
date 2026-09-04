@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor Dragon Follower</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        #dragon {
+            position: fixed;
+            font-size: 3rem;
+            pointer-events: none;
+            transition: transform 0.1s ease-out;
+            z-index: 1000;
+        }
+
+        .info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 500;
+        }
+
+        .info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="dragon">🐉</div>
+    <div class="info">
+        <p>🐉 Move your cursor around!</p>
+    </div>
+
+    <script>
+        const dragon = document.getElementById('dragon');
+        let dragonX = window.innerWidth / 2;
+        let dragonY = window.innerHeight / 2;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        // Update mouse position
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Animation loop for smooth following
+        function animateDragon() {
+            // Calculate distance to mouse
+            const dx = mouseX - dragonX;
+            const dy = mouseY - dragonY;
+
+            // Move dragon towards cursor (smooth easing)
+            dragonX += dx * 0.1;
+            dragonY += dy * 0.1;
+
+            // Update dragon position
+            dragon.style.left = dragonX + 'px';
+            dragon.style.top = dragonY + 'px';
+
+            // Calculate rotation based on direction
+            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+            
+            // Flip dragon based on cursor position
+            if (dx < 0) {
+                dragon.style.transform = `scaleX(-1) rotate(${angle}deg)`;
+            } else {
+                dragon.style.transform = `scaleX(1) rotate(${angle}deg)`;
+            }
+
+            requestAnimationFrame(animateDragon);
+        }
+
+        // Start animation
+        animateDragon();
+    </script>
+</body>
+</html>
